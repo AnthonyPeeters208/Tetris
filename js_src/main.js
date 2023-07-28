@@ -11,10 +11,18 @@ console.log("Canvas dim: " + tetris_canvas.height + "x" + tetris_canvas.width);
 
 // TETRIS GAME
 const ctx = document.getElementById("tetriscanvas").getContext("2d");
-let game = new TetrisGame(ctx, cell_width);
+const scoreboard = document.getElementById("scorevalue");
+let game = new TetrisGame(ctx, cell_width, scoreboard);
 game.start();
+
+let framecounter = 0;
 function dropGamePiece(){
-    game.dropPiece();
+    if(framecounter >= 60){  // every 30 frames
+        game.dropPiece();
+        framecounter = 0;
+    }
+    framecounter++;
+    window.requestAnimationFrame(dropGamePiece);
 }
 
 window.requestAnimationFrame(dropGamePiece);

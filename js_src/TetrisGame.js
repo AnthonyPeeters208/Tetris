@@ -11,13 +11,14 @@ function getRandomInt(max) {
 }
 
 class TetrisGame{
-    constructor(ctx, cell_width) {
+    constructor(ctx, cell_width, scoreboard) {
         // ctx: canvas contex 2d
         // cell_width: width of a single cell in pixels
         this.ctx = ctx;
         this.cell_width = cell_width;
         this.game_height = 20;
         this.game_width = 10;
+        this.scoreboard = scoreboard;
 
         let matrix_map = []
         for(let h=-2; h<this.game_height; h++){
@@ -33,6 +34,10 @@ class TetrisGame{
         this.piece_collection = [I_Piece, J_Piece, L_Piece, O_Piece, S_Piece, Z_Piece, T_Piece];
         this.curr_sequence = [];
         this.curr_piece = null;
+    }
+
+    updateScore(){
+        this.scoreboard.innerHTML = this.score;
     }
 
     addNewSequence(){
@@ -117,15 +122,21 @@ class TetrisGame{
                 }
             }
         }
+        // update score
+        this.updateScore();
     }
 
     moveDown(){
         let old_y = this.curr_piece.y;
         this.curr_piece.y = old_y+1;
+        let isValid = this.isValidMove();
 
         // if not valid move, put it back to old position
-        if(!this.isValidMove()){
+        if(!isValid){
             this.curr_piece.y = old_y;
+        }
+        else{
+            this.score += 10;
         }
         this.drawPieces();
     }
@@ -166,8 +177,14 @@ class TetrisGame{
     dropPiece(){
         this.moveDown();
         this.drawPieces();
-        console.log("peepo")
     }
+
+    test(){
+        this.moveDown();
+        console.log("test called");
+    }
+
+
 
     start(){
         this.addNewSequence();
