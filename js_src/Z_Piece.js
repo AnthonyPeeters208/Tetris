@@ -8,7 +8,7 @@ class Z_Piece extends TetrisPiece{
             [0,0,0]
         ]
         let color = "green";
-        super(matrixrepr, x, y);
+        super(matrixrepr, x, y, color);
     }
 }
 

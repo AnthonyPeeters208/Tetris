@@ -7,7 +7,7 @@ class O_Piece extends TetrisPiece{
             [1,1]
         ]
         let color = "yellow";
-        super(matrixrepr, x, y);
+        super(matrixrepr, x, y, color);
     }
 }
 
