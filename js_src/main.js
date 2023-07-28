@@ -8,9 +8,6 @@ tetris_canvas.width = cell_width * 10;
 console.log("Canvas dim: " + tetris_canvas.height + "x" + tetris_canvas.width);
 
 // TETRIS GAME
-let game = new TetrisGame();
-//console.log(game.game_matrix);
-console.log(game.curr_sequence);
-game.addNewSequence();
-game.addNewSequence();
-console.log(game.curr_sequence);
+const ctx = document.getElementById("tetriscanvas").getContext("2d");
+let game = new TetrisGame(ctx, cell_width);
+game.start();

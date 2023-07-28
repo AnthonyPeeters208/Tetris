@@ -11,7 +11,12 @@ function getRandomInt(max) {
 }
 
 class TetrisGame{
-    constructor() {
+    constructor(ctx, cell_width) {
+        // ctx: canvas contex 2d
+        // cell_width: width of a single cell in pixels
+        this.ctx = ctx;
+        this.cell_width = cell_width;
+
         let matrix_map = []
         for(let h=-2; h<20; h++){
             let row = []
@@ -38,9 +43,90 @@ class TetrisGame{
         }
     }
 
-    start(){
-        this.curr_piece = getNextPiece();
+    peekNextPiece(){
+        return this.curr_sequence[0];
     }
+
+    getNextPiece(){
+        // puts next piece at curr piece, "pops" from array
+        let piecetype = this.curr_sequence.shift();
+        this.curr_piece = new piecetype(3, -2);    // x=3 and y=-2
+        if(this.curr_sequence.length <= 1){
+            this.addNewSequence();
+        }
+    }
+
+    isValidMove(){
+        //TODO
+        return true;
+    }
+
+    moveDown(){
+        let old_y = this.curr_piece.y;
+        this.curr_piece.y = old_y+1;
+
+        // if not valid move, put it back to old position
+        if(!this.isValidMove()){
+            this.curr_piece.y = old_y;
+        }
+    }
+
+    placeCurrPiece(){
+        // TODO: check if piece allowed to be placed
+        let piecematrix = this.curr_piece.matrix_rep;
+        for(let i=0; i<piecematrix.length; i++){
+            for(let j=0; j<piecematrix[0].length; j++){
+                if(piecematrix[i][j] === 1){
+                    let game_x = this.curr_piece.x + j;
+                    let game_y = this.curr_piece.y + i;
+                    // set the color of the piece in the matrix
+                    this.game_matrix[game_y][game_x] = this.curr_piece.color;
+                }
+            }
+        }
+    }
+
+    drawPieces(){
+        // draw pieces using canvas context
+        // cell width in pixels
+        let cw = this.cell_width;
+        for(let i=0; i<this.game_matrix.length; i++){
+            for(let j=0; j<this.game_matrix[0].length; j++){
+                // draw grid regardless
+                this.ctx.fillStyle = "#1b1b1b"
+                this.ctx.fillRect(j*cw+1, i*cw+1, cw-2, cw-2);
+
+                if(this.game_matrix[i][j] !== 0){
+                    let xval = j*cw;
+                    let yval = i*cw;
+                    // color blocks
+                    this.ctx.fillStyle = this.game_matrix[i][j];
+                    this.ctx.fillRect(xval+1, yval+1, cw-2, cw-2);
+                }
+            }
+        }
+    }
+
+    dropPiece(){
+        this.moveDown();
+        this.placeCurrPiece();
+        this.drawPieces();
+        window.requestAnimationFrame(this.dropPiece);
+    }
+
+    start(){
+        this.addNewSequence();
+        this.getNextPiece();
+        this.moveDown();
+        this.moveDown();
+        this.placeCurrPiece();
+        this.drawPieces()
+        window.requestAnimationFrame(this.dropPiece);
+
+    }
+
+
+
 }
 
 export {TetrisGame}
