@@ -34,7 +34,6 @@ document.onkeydown = function (e) {
     switch (e.key) {
         case 'ArrowUp':
             game.rotateCurrPiece();
-            console.log("rotate call");
             break;
         case 'ArrowDown':
             let success = game.moveDown();
@@ -49,3 +48,43 @@ document.onkeydown = function (e) {
             game.moveRight();
     }
 };
+
+/*
+Add listeners for swipe
+ */
+let touchstartX = 0
+let touchstartY = 0
+let touchendX = 0
+let touchendY = 0
+
+function checkDirection() {
+    if( Math.abs(touchendX - touchstartX) > Math.abs(touchendY - touchstartY)){
+        // Horizontal swipe
+        if (touchendX < touchstartX){
+            game.moveLeft();
+        }
+        if (touchendX > touchstartX){
+            game.moveRight();
+        }
+    }
+    else{
+        // vertical swipe
+        if (touchendY < touchstartY) {
+            game.rotateCurrPiece(); // move 'up'
+        }
+        if (touchendY > touchstartY) {
+            game.moveDown();
+        }
+    }
+}
+
+document.addEventListener('touchstart', e => {
+    touchstartX = e.changedTouches[0].screenX
+    touchstartY = e.changedTouches[0].screenY
+});
+
+document.addEventListener('touchend', e => {
+    touchendX = e.changedTouches[0].screenX;
+    touchendY = e.changedTouches[0].screenY;
+    checkDirection();
+});
