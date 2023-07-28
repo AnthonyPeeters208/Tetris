@@ -193,6 +193,42 @@ class TetrisGame{
         this.score += amount;
     }
 
+    clearOneLine(index){
+        // Clear a specific line at index i
+        for(let i=index; i>=0; i--){
+            for(let j=0; j<this.game_width; j++){
+                if(i===0){
+                    this.game_matrix[i][j] = 0; // empty first row
+                }
+                else{
+                    // take the block from cell above
+                    this.game_matrix[i][j] = this.game_matrix[i-1][j];
+                }
+            }
+        }
+    }
+
+    clearLines(){
+        // go over everything reverse order
+        for(let i=(this.game_height-1); i>=0; i--){
+            let row_full = true;
+            for(let j=0; j<this.game_width; j++){
+                if(this.game_matrix[i][j] === 0){
+                    row_full = false;
+                }
+            }
+
+            if(row_full){
+                this.clearOneLine(i);
+                this.increaseScore(100);    // increase with 100 points
+                return this.clearLines();   // recursively remove all lines
+            }
+        }
+        this.drawPieces();
+    }
+
+
+
 
     dropPiece(){
         this.moveDown();

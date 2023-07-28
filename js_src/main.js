@@ -19,6 +19,7 @@ let framecounter = 0;
 function dropGamePiece(){
     if(framecounter >= 64){  // every 64 frames
         game.dropPiece();
+        game.clearLines();
         framecounter = 0;
     }
     framecounter++;
@@ -31,6 +32,7 @@ window.requestAnimationFrame(dropGamePiece);
 Add event listeners for the keystrokes
  */
 document.onkeydown = function (e) {
+    game.clearLines();
     switch (e.key) {
         case 'ArrowUp':
             game.rotateCurrPiece();
@@ -58,6 +60,7 @@ let touchendX = 0
 let touchendY = 0
 
 function checkDirection() {
+    game.clearLines();
     if( Math.abs(touchendX - touchstartX) > Math.abs(touchendY - touchstartY)){
         // Horizontal swipe
         if (touchendX < touchstartX){
