@@ -157,8 +157,19 @@ class TetrisGame{
         this.moveHorizontal(+1);
     }
 
+    moveDownWouldFail(){
+        // Checks whether moving down would fail
+        let old_y = this.curr_piece.y;
+        this.curr_piece.y = old_y+1;
+        let isValid = this.isValidMove();
+        this.curr_piece.y = old_y;
+
+        if(!isValid){ return true;} // failed
+        return false;   // moving down would not fail
+    }
+
     placeCurrPiece(){
-        // TODO: check if piece allowed to be placed
+        // TODO: check if piece allowed to be placed -> beforehand!
         let piecematrix = this.curr_piece.matrix_rep;
         for(let i=0; i<piecematrix.length; i++){
             for(let j=0; j<piecematrix[0].length; j++){
@@ -173,26 +184,22 @@ class TetrisGame{
     }
 
 
-
     dropPiece(){
         this.moveDown();
         this.drawPieces();
+        if(this.moveDownWouldFail()){
+            // lock in the block and get next one
+            this.placeCurrPiece();
+            this.getNextPiece();
+            this.drawPieces();
+        }
     }
-
-    test(){
-        this.moveDown();
-        console.log("test called");
-    }
-
 
 
     start(){
         this.addNewSequence();
         this.getNextPiece();
-        this.moveDown();
-        this.moveDown();
         this.drawPieces()
-
     }
 
 

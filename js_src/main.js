@@ -17,7 +17,7 @@ game.start();
 
 let framecounter = 0;
 function dropGamePiece(){
-    if(framecounter >= 60){  // every 30 frames
+    if(framecounter >= 64){  // every 64 frames
         game.dropPiece();
         framecounter = 0;
     }
