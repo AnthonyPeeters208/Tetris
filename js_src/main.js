@@ -73,7 +73,10 @@ function checkDirection() {
             game.rotateCurrPiece(); // move 'up'
         }
         if (touchendY > touchstartY) {
-            game.moveDown();
+            let success = game.moveDown();
+            if(success){
+                game.increaseScore(1);
+            }
         }
     }
 }
