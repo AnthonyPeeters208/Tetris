@@ -33,10 +33,14 @@ Add event listeners for the keystrokes
 document.onkeydown = function (e) {
     switch (e.key) {
         case 'ArrowUp':
-            // do rotation
+            game.rotateCurrPiece();
+            console.log("rotate call");
             break;
         case 'ArrowDown':
-            game.moveDown();
+            let success = game.moveDown();
+            if(success){
+                game.increaseScore(1);
+            }
             break;
         case 'ArrowLeft':
             game.moveLeft();

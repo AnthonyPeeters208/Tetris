@@ -7,7 +7,18 @@ class TetrisPiece{
     }
 
     rotate(){
-        // rotate tetris piece
+        // rotates clockwise
+        let newmatrixrep = []
+        let oldm = this.matrix_rep;
+        for(let i=0; i<oldm.length; i++){
+            let row = []
+            for(let j=(oldm.length-1); j>=0; j--){
+                row.push(oldm[j][i]);
+            }
+            newmatrixrep.push(row);
+        }
+        this.matrix_rep = newmatrixrep;
+        console.log(this.matrix_rep);
     }
 
 }

@@ -135,10 +135,8 @@ class TetrisGame{
         if(!isValid){
             this.curr_piece.y = old_y;
         }
-        else{
-            this.score += 10;
-        }
         this.drawPieces();
+        return isValid;
     }
     moveHorizontal(modifier){
         // move left (-1) or right (+1)
@@ -181,6 +179,15 @@ class TetrisGame{
                 }
             }
         }
+    }
+
+    rotateCurrPiece(){
+        this.curr_piece.rotate();
+        this.drawPieces();
+    }
+
+    increaseScore(amount){
+        this.score += amount;
     }
 
 
