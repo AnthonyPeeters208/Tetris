@@ -183,6 +183,9 @@ class TetrisGame{
 
     rotateCurrPiece(){
         this.curr_piece.rotate();
+        if(!this.isValidMove()){
+            for(let i=0;i<3;i++){this.curr_piece.rotate()}
+        }
         this.drawPieces();
     }
 
