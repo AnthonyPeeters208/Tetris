@@ -36,6 +36,8 @@ class TetrisGame{
         this.piece_collection = [I_Piece, J_Piece, L_Piece, O_Piece, S_Piece, Z_Piece, T_Piece];
         this.curr_sequence = [];
         this.curr_piece = null;
+
+        this.waitToPlaceBlock = false;  // if we are currently waiting to place a block
     }
 
     updateScore(){
@@ -237,22 +239,24 @@ class TetrisGame{
     }
 
     clearLines(){
-        // go over everything reverse order
-        for(let i=(this.game_height-1); i>=0; i--){
-            let row_full = true;
-            for(let j=0; j<this.game_width; j++){
-                if(this.game_matrix[i][j] === 0){
-                    row_full = false;
+        if(!this.waitToPlaceBlock){
+            // go over everything reverse order
+            for(let i=(this.game_height-1); i>=0; i--){
+                let row_full = true;
+                for(let j=0; j<this.game_width; j++){
+                    if(this.game_matrix[i][j] === 0){
+                        row_full = false;
+                    }
+                }
+
+                if(row_full){
+                    this.clearOneLine(i);
+                    this.increaseScore(100);    // increase with 100 points
+                    return this.clearLines();   // recursively remove all lines
                 }
             }
-
-            if(row_full){
-                this.clearOneLine(i);
-                this.increaseScore(100);    // increase with 100 points
-                return this.clearLines();   // recursively remove all lines
-            }
+            this.drawPieces();
         }
-        this.drawPieces();
     }
 
 
@@ -262,11 +266,18 @@ class TetrisGame{
         this.moveDown();
         this.drawPieces();
         if(this.moveDownWouldFail()){
-            // lock in the block and get next one
-            this.placeCurrPiece();
-            this.getNextPiece();
-            this.drawPieces();
-            this.drawPreview(); // refresh the preview
+            if(this.waitToPlaceBlock){
+                // lock in the block and get next one
+                this.waitToPlaceBlock = false;
+                this.placeCurrPiece();
+                this.getNextPiece();
+                this.drawPieces();
+                this.drawPreview(); // refresh the preview
+            }
+            else{
+                // wait another frame before placing block
+                this.waitToPlaceBlock = true;
+            }
         }
     }
 
