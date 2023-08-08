@@ -27,6 +27,10 @@
     background-color: var(--grid-lines-color);
     border: 1px solid var(--grid-lines-color);
   }
+  #nextpiecepreview{
+    background-color: var(--grid-lines-color);
+    border: 1px solid var(--grid-lines-color);
+  }
 </style>
 <head>
   <meta charset="UTF-8">
@@ -38,9 +42,12 @@
 <div class="center">
   <h1>Welcome to my Tetris clone</h1>
 </div>
-<div class="flex-container center">
+<div class="flex-container center" style="padding-bottom: 10px">
   <h3>Score:&ensp;</h3>
   <h3 id="scorevalue">0</h3>
+  &ensp;&ensp;&ensp;
+  <h3>Next:&ensp;</h3>
+  <canvas id="nextpiecepreview">Small canvas where the next piece will be displayed</canvas>
 </div>
 
 

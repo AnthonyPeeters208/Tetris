@@ -8,12 +8,17 @@ tetris_canvas.height = cell_width * 20;
 tetris_canvas.width = cell_width * 10;
 console.log("Canvas dim: " + tetris_canvas.height + "x" + tetris_canvas.width);
 
+const previewcanvas = document.getElementById("nextpiecepreview");  // 4x4 matrix
+previewcanvas.height = cell_width;
+previewcanvas.width = cell_width * 2;
+
 
 
 // TETRIS GAME
 const ctx = document.getElementById("tetriscanvas").getContext("2d");
 const scoreboard = document.getElementById("scorevalue");
-let game = new TetrisGame(ctx, cell_width, scoreboard);
+const previewctx = document.getElementById("nextpiecepreview").getContext("2d");
+let game = new TetrisGame(ctx, cell_width, scoreboard, previewctx);
 game.start();
 
 let framecounter = 0;

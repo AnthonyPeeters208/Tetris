@@ -18,7 +18,6 @@ class TetrisPiece{
             newmatrixrep.push(row);
         }
         this.matrix_rep = newmatrixrep;
-        console.log(this.matrix_rep);
     }
 
 }

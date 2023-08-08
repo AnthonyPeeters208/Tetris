@@ -11,14 +11,16 @@ function getRandomInt(max) {
 }
 
 class TetrisGame{
-    constructor(ctx, cell_width, scoreboard) {
+    constructor(ctx, cell_width, scoreboard, previewctx) {
         // ctx: canvas contex 2d
         // cell_width: width of a single cell in pixels
+        // previewctx: 2d context of preview canvas
         this.ctx = ctx;
         this.cell_width = cell_width;
         this.game_height = 20;
         this.game_width = 10;
         this.scoreboard = scoreboard;
+        this.nextpiecepreview = previewctx;
 
         let matrix_map = []
         for(let h=-2; h<this.game_height; h++){
@@ -124,6 +126,32 @@ class TetrisGame{
         }
         // update score
         this.updateScore();
+    }
+
+    drawPreview(){
+        // Draws the piece in the preview canvas
+        let nextpiecetype = this.peekNextPiece();
+        let nextpiece = new nextpiecetype(0, 0);    // temporarily make new piece
+        let cw = this.cell_width/2;
+        let piecedim = nextpiece.matrix_rep.length;
+        for(let i=0; i < 2; i++){
+            for(let j=0; j < 4; j++){
+                // draw grid regardless
+                this.nextpiecepreview.fillStyle = "#1b1b1b"
+                this.nextpiecepreview.fillRect(j*cw+1, i*cw+1, cw-2, cw-2);
+                if(i < piecedim && j < piecedim ){
+                    if(nextpiece.matrix_rep[i][j] !== 0){
+                        let xval = j*cw;
+                        let yval = i*cw;
+                        // color blocks
+                        this.nextpiecepreview.fillStyle = nextpiece.color;
+                        this.nextpiecepreview.fillRect(xval+1, yval+1, cw-2, cw-2);
+                    }
+                }
+
+            }
+        }
+
     }
 
     moveDown(){
@@ -238,6 +266,7 @@ class TetrisGame{
             this.placeCurrPiece();
             this.getNextPiece();
             this.drawPieces();
+            this.drawPreview(); // refresh the preview
         }
     }
 
@@ -245,7 +274,8 @@ class TetrisGame{
     start(){
         this.addNewSequence();
         this.getNextPiece();
-        this.drawPieces()
+        this.drawPieces();
+        this.drawPreview();
     }
 
 
