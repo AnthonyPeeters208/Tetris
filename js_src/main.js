@@ -12,8 +12,6 @@ const previewcanvas = document.getElementById("nextpiecepreview");  // 4x4 matri
 previewcanvas.height = cell_width;
 previewcanvas.width = cell_width * 2;
 
-
-
 // TETRIS GAME
 const ctx = document.getElementById("tetriscanvas").getContext("2d");
 const scoreboard = document.getElementById("scorevalue");
@@ -21,9 +19,26 @@ const previewctx = document.getElementById("nextpiecepreview").getContext("2d");
 let game = new TetrisGame(ctx, cell_width, scoreboard, previewctx);
 game.start();
 
+
+
+
+
+let base_framerate = 64;
+function isMobileDevice(){
+    if(window.innerHeight > window.innerWidth){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+if(isMobileDevice()){
+    base_framerate = 32;
+}
+
 let framecounter = 0;
 function dropGamePiece(){
-    if(framecounter >= 64){  // every 64 frames
+    if(framecounter >= base_framerate){  // every 64 frames
         game.dropPiece();
         game.clearLines();
         framecounter = 0;
