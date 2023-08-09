@@ -38,6 +38,7 @@ class TetrisGame{
         this.curr_piece = null;
 
         this.waitToPlaceBlock = false;  // if we are currently waiting to place a block
+        this.isGameOver = false;    // whether the game is over (player lost)
     }
 
     updateScore(){
@@ -94,6 +95,13 @@ class TetrisGame{
             }
         }
         return true;
+    }
+
+    notifyGameOver(){
+        // Notify that the game is over
+        if(this.isGameOver){
+            alert("Game over!\nFinal score: " + this.score);
+        }
     }
 
     drawPieces(){
@@ -203,6 +211,11 @@ class TetrisGame{
                 if(piecematrix[i][j] === 1){
                     let game_x = this.curr_piece.x + j;
                     let game_y = this.curr_piece.y + i;
+
+                    if(game_x < 0 || game_y < 0){
+                        this.isGameOver = true;
+                        return;
+                    }
                     // set the color of the piece in the matrix
                     this.game_matrix[game_y][game_x] = this.curr_piece.color;
                 }
@@ -259,8 +272,6 @@ class TetrisGame{
     }
 
 
-
-
     dropPiece(){
         this.moveDown();
         this.drawPieces();
@@ -292,6 +303,9 @@ class TetrisGame{
         // Execute 1 tick
         this.dropPiece();
         this.clearLines();
+        if(this.isGameOver){
+            this.notifyGameOver();
+        }
     }
 
 
