@@ -238,7 +238,7 @@ class TetrisGame{
         }
     }
 
-    clearLines(){
+    clearLines(multiplier=1){
         if(!this.waitToPlaceBlock){
             // go over everything reverse order
             for(let i=(this.game_height-1); i>=0; i--){
@@ -251,8 +251,8 @@ class TetrisGame{
 
                 if(row_full){
                     this.clearOneLine(i);
-                    this.increaseScore(100);    // increase with 100 points
-                    return this.clearLines();   // recursively remove all lines
+                    this.increaseScore(100*multiplier);    // increase with 100 points
+                    return this.clearLines(multiplier*2);   // recursively remove all lines
                 }
             }
             this.drawPieces();
