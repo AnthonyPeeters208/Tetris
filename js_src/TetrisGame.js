@@ -68,7 +68,6 @@ class TetrisGame{
     }
 
     isValidMove(){
-        //TODO
         let cp = this.curr_piece;
         for(let i=0; i<cp.matrix_rep.length; i++){
             for(let j=0; j<cp.matrix_rep[0].length; j++){
@@ -287,6 +286,12 @@ class TetrisGame{
         this.getNextPiece();
         this.drawPieces();
         this.drawPreview();
+    }
+
+    doTick(){
+        // Execute 1 tick
+        this.dropPiece();
+        this.clearLines();
     }
 
 

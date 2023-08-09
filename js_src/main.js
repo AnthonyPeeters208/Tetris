@@ -37,17 +37,16 @@ if(isMobileDevice()){
 }
 
 let framecounter = 0;
-function dropGamePiece(){
+function getGameFrame(){
     if(framecounter >= base_framerate){  // every 64 frames
-        game.dropPiece();
-        game.clearLines();
+        game.doTick();
         framecounter = 0;
     }
     framecounter++;
-    window.requestAnimationFrame(dropGamePiece);
+    window.requestAnimationFrame(getGameFrame);
 }
 
-window.requestAnimationFrame(dropGamePiece);
+window.requestAnimationFrame(getGameFrame);
 
 /*
 Add event listeners for the keystrokes
