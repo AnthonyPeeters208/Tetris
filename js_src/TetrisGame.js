@@ -39,6 +39,7 @@ class TetrisGame{
 
         this.waitToPlaceBlock = false;  // if we are currently waiting to place a block
         this.isGameOver = false;    // whether the game is over (player lost)
+        this.marked_lines = []; // indices of rows marked to be deleted
     }
 
     updateScore(){
@@ -105,6 +106,10 @@ class TetrisGame{
     }
 
     drawPieces(){
+        // draw background
+        this.ctx.fillStyle = "#2a2a2a"; // bg color
+        this.ctx.fillRect(0, 0, this.game_width*this.cell_width, this.game_height*this.cell_width);
+
         // draw pieces placed in the game
         let cw = this.cell_width;
         for(let i=0; i<this.game_matrix.length; i++){
@@ -120,6 +125,7 @@ class TetrisGame{
                     this.ctx.fillStyle = this.game_matrix[i][j];
                     this.ctx.fillRect(xval+1, yval+1, cw-2, cw-2);
                 }
+
             }
         }
         // draw current piece
@@ -131,6 +137,14 @@ class TetrisGame{
                     this.ctx.fillStyle = this.curr_piece.color;
                     this.ctx.fillRect(xval+1, yval+1, cw-2, cw-2);
                 }
+            }
+        }
+        // draw white lines
+        for(let r=0; r<this.marked_lines.length; r++){
+            let row= this.marked_lines[r];
+            for(let j=0; j<this.game_width; j++){
+                this.ctx.fillStyle = "white";
+                this.ctx.fillRect(j*cw, row*cw, cw, cw);
             }
         }
         // update score
@@ -250,24 +264,38 @@ class TetrisGame{
         }
     }
 
-    clearLines(multiplier=1){
+    markLines(){
+        // Mark lines to be cleared next
         if(!this.waitToPlaceBlock){
-            // go over everything reverse order
-            for(let i=(this.game_height-1); i>=0; i--){
+            for(let i=0; i<this.game_height; i++){
                 let row_full = true;
                 for(let j=0; j<this.game_width; j++){
                     if(this.game_matrix[i][j] === 0){
                         row_full = false;
                     }
                 }
-
                 if(row_full){
-                    this.clearOneLine(i);
-                    this.increaseScore(100*multiplier);    // increase with 100 points
-                    return this.clearLines(multiplier*2);   // recursively remove all lines
+                    this.marked_lines.push(i);
                 }
             }
-            this.drawPieces();
+        }
+    }
+
+    clearLines(){
+        if(!this.waitToPlaceBlock){
+            // go over marked lines in reverse order
+            if(this.marked_lines.length > 0){
+                let lines_cleared = 0;
+                for(let i=this.marked_lines.length-1; i>=0; i--){
+                    let row_index = this.marked_lines[i] + lines_cleared;
+                    this.clearOneLine(row_index);
+                    lines_cleared += 1;
+                    this.increaseScore(lines_cleared * 100);    // update score (intentional extra)
+                }
+
+                this.marked_lines = [];
+                this.drawPieces();
+            }
         }
     }
 
@@ -302,10 +330,12 @@ class TetrisGame{
     doTick(){
         // Execute 1 tick
         this.dropPiece();
-        this.clearLines();
         if(this.isGameOver){
             this.notifyGameOver();
         }
+        this.clearLines();
+        this.markLines();
+        this.drawPieces();
     }
 
 
