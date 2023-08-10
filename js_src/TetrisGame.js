@@ -359,11 +359,32 @@ class TetrisGame{
         this.drawPreview();
     }
 
+    reset(){
+        // clear map
+        let matrix_map = []
+        for(let h=-2; h<this.game_height; h++){
+            let row = []
+            for(let w=0; w<this.game_width; w++){
+                row.push(0);
+            }
+            matrix_map.push(row);
+        }
+        this.game_matrix = matrix_map;
+        this.score = 0;
+        this.curr_sequence = [];
+        this.curr_piece = null;
+        this.waitToPlaceBlock = false;
+        this.isGameOver = false;
+        this.marked_lines = [];
+        this.start();
+    }
+
     doTick(){
         // Execute 1 tick
         this.dropPiece();
         if(this.isGameOver){
             this.notifyGameOver();
+            this.reset();
         }
         this.clearLines();
         this.markLines();
