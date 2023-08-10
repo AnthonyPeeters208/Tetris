@@ -98,6 +98,18 @@ class TetrisGame{
         return true;
     }
 
+    getGhostPiece(){
+        // creates a ghost piece, which it can draw on the screen
+        let realpiece_y = this.curr_piece.y;
+        // move piece all the way down
+        while(this.moveDown(false)){}
+        // create ghost piece
+        let gp = JSON.parse(JSON.stringify(this.curr_piece));
+        // reset real piece
+        this.curr_piece.y = realpiece_y;
+        return gp;
+    }
+
     notifyGameOver(){
         // Notify that the game is over
         if(this.isGameOver){
@@ -128,6 +140,21 @@ class TetrisGame{
 
             }
         }
+        // draw ghost piece
+        let ghostpiece = this.getGhostPiece();
+        for(let i=0; i<ghostpiece.matrix_rep.length; i++){
+            for(let j=0; j<ghostpiece.matrix_rep[0].length; j++){
+                if(ghostpiece.matrix_rep[i][j] !== 0){
+                    let xval = (ghostpiece.x + j)*cw;
+                    let yval = (ghostpiece.y + i)*cw;
+                    this.ctx.fillStyle = this.curr_piece.color;
+                    this.ctx.fillRect(xval+1, yval+1, cw-2, cw-2);
+                    // draw extra square for the ghost effect
+                    this.ctx.fillStyle = "#1b1b1b"; // bg color
+                    this.ctx.fillRect(xval+2, yval+2, cw-4, cw-4);
+                }
+            }
+        }
         // draw current piece
         for(let i=0; i<this.curr_piece.matrix_rep.length; i++){
             for(let j=0; j<this.curr_piece.matrix_rep[0].length; j++){
@@ -139,6 +166,8 @@ class TetrisGame{
                 }
             }
         }
+
+
         // draw white lines
         for(let r=0; r<this.marked_lines.length; r++){
             let row= this.marked_lines[r];
@@ -177,7 +206,7 @@ class TetrisGame{
 
     }
 
-    moveDown(){
+    moveDown(drawpieces=true){
         let old_y = this.curr_piece.y;
         this.curr_piece.y = old_y+1;
         let isValid = this.isValidMove();
@@ -186,7 +215,9 @@ class TetrisGame{
         if(!isValid){
             this.curr_piece.y = old_y;
         }
-        this.drawPieces();
+        if(drawpieces){
+            this.drawPieces();
+        }
         return isValid;
     }
     moveHorizontal(modifier){
@@ -205,6 +236,7 @@ class TetrisGame{
     moveRight(){
         this.moveHorizontal(+1);
     }
+
 
     moveDownWouldFail(){
         // Checks whether moving down would fail
