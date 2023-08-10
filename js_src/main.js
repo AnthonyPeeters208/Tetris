@@ -55,8 +55,10 @@ document.onkeydown = function (e) {
     game.clearLines();
     switch (e.key) {
         case 'ArrowUp':
+        case ' ':
             game.rotateCurrPiece();
             break;
+
         case 'ArrowDown':
             let success = game.moveDown();
             if(success){
